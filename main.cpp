@@ -5,30 +5,36 @@ typedef long long ll;
 #define nl '\n'
 
 struct screen{
-    const char *title = "hello world";
-    int width = 1366;
-    int height = 768;
+    //title
+    const char *title = "SDL2-Template";
+    //resolution
+    int width = 1280;
+    int height = 720;
+    //position
     int x = SDL_WINDOWPOS_CENTERED;
     int y = SDL_WINDOWPOS_CENTERED;
-    Uint32 window_flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED;
+    //window flags
+    Uint32 window_fixedsize = 0;
+    Uint32 window_resizable = SDL_WINDOW_RESIZABLE;
+    //renderer flags
     Uint32 renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 } Screen;
 
 int main(int argc, char* argv[]){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
-        printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
+        cout << "Error: SDL failed to initialize - " << SDL_GetError();
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow(Screen.title, Screen.x, Screen.y, Screen.width, Screen.height, Screen.window_flags);
+    SDL_Window *window = SDL_CreateWindow(Screen.title, Screen.x, Screen.y, Screen.width, Screen.height, Screen.window_fixedsize);
     if(!window){
-        printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
+        cout << "Error: Failed to open window - " << SDL_GetError();
         return 1;
     }
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, Screen.renderer_flags);
     if(!renderer){
-        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
+        cout << "Error: Failed to create renderer - " << SDL_GetError();
         return 1;
     }
 
@@ -48,9 +54,7 @@ int main(int argc, char* argv[]){
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
-
         SDL_RenderPresent(renderer);
     }
-
     return 0;
 }
