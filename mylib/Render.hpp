@@ -13,4 +13,5 @@ public:
     Render(SDL_Window * window);
     void Clear();
     void Display();
+    void CleanUp();
 };

@@ -34,6 +34,7 @@ int main(int argc, char* argv[]){
     }
 
     currentScreen.CleanUp();
+    currentRenderer.CleanUp();
     SDL_Quit();
     return 0;
 }

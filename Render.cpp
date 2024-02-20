@@ -16,3 +16,7 @@ void Render::Clear(){
 void Render::Display(){
     SDL_RenderPresent(renderer);
 }
+
+void Render::CleanUp(){
+    SDL_DestroyRenderer(renderer);
+}
