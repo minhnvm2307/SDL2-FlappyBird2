@@ -35,10 +35,6 @@ bool GameLoop::getGameState()
 double last = 0;
 void GameLoop::FPSlimit()
 {
-	// if(FPS > 10 && points % 5==0){
-	// 	FPS -= accelerate;
-	// 	cout << FPS << endl;
-	// }
 	double first = SDL_GetTicks();
         if(first - last < FPS)
         {
@@ -54,15 +50,15 @@ void GameLoop::Intialize()
 	IMG_Init(IMG_INIT_PNG);
     TTF_Init();
 	Mix_Init(MIX_INIT_MP3 | MIX_INIT_OPUS | MIX_INIT_OGG);
-	int result = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048);
-	cout << result << endl;
-    if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) == -1)
-    {
-        cout << "Failed to open audio" << endl;
-    }else {cout << " Succeed to open audio " << endl;}
-	//Mix_Music *music = Mix_LoadMUS("Sound/backgroundSound.mp3");
-	//Mix_PlayMusic(music, -1);
-	//MusGame.PlayBgMusic("Sound/backgroundSound.mp3");
+	// int result = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048);
+	// cout << result << endl;
+    // if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) == -1)
+    // {
+    //     cout << "Failed to open audio" << endl;
+    // }else {cout << " Succeed to open audio " << endl;}
+	// //Mix_Music *music = Mix_LoadMUS("Sound/backgroundSound.mp3");
+	// //Mix_PlayMusic(music, -1);
+	// //MusGame.PlayBgMusic("Sound/backgroundSound.mp3");
     window = SDL_CreateWindow("Flappy MINH", SDL_WINDOWEVENT_ENTER, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
     if(window)
     {
@@ -150,42 +146,42 @@ void GameLoop::Update()
 	maxScore.Text(s, renderer);
 	//////////////////////////
 	bool flag1 = false, flag2 = false;
-	ground1.GroundUpdate1();
-	ground2.GroundUpdate2();
-	flag1 = Pipe_Above1.Pipe_Above1Update(variance1, points);
-	flag2 = Pipe_Below1.Pipe_Below1Update(variance1);
+	ground1.GroundUpdate1(speed);
+	ground2.GroundUpdate2(speed);
+	flag1 = Pipe_Above1.Pipe_Above1Update(variance1, points, speed);
+	flag2 = Pipe_Below1.Pipe_Below1Update(variance1, speed);
 	if (flag1 && flag2)
 	{
 		srand(SDL_GetTicks());
 		variance1 = rand() % 201 - 100;
-		Pipe_Above1.Pipe_Above1Update(variance1, points);
-		Pipe_Below1.Pipe_Below1Update(variance1);
+		Pipe_Above1.Pipe_Above1Update(variance1, points, speed);
+		Pipe_Below1.Pipe_Below1Update(variance1, speed);
 	}
-	flag1 = Pipe_Above2.Pipe_Above2Update(variance2, points);
-	flag2 = Pipe_Below2.Pipe_Below2Update(variance2);
+	flag1 = Pipe_Above2.Pipe_Above2Update(variance2, points, speed);
+	flag2 = Pipe_Below2.Pipe_Below2Update(variance2, speed);
 	if (flag1 && flag2)
 	{
 		srand(SDL_GetTicks());
 		variance2 = rand() % 201 - 100;
-		Pipe_Above2.Pipe_Above2Update(variance2, points);
-		Pipe_Below2.Pipe_Below2Update(variance2);
+		Pipe_Above2.Pipe_Above2Update(variance2, points, speed);
+		Pipe_Below2.Pipe_Below2Update(variance2, speed);
 	}
-	flag1 = Pipe_Above3.Pipe_Above3Update(variance3, points);
-	flag1 = Pipe_Below3.Pipe_Below3Update(variance3);
+	flag1 = Pipe_Above3.Pipe_Above3Update(variance3, points, speed);
+	flag1 = Pipe_Below3.Pipe_Below3Update(variance3, speed);
 	if (flag1 && flag2)
 	{
 		srand(SDL_GetTicks());
 		variance3 = rand() % 201 - 100;
-		Pipe_Above3.Pipe_Above3Update(variance3, points);
-		Pipe_Below3.Pipe_Below3Update(variance3);
+		Pipe_Above3.Pipe_Above3Update(variance3, points, speed);
+		Pipe_Below3.Pipe_Below3Update(variance3, speed);
 	}
-    flag1 = Golden_Apple.Golden_AppleUpdate(variance4, points);
+    flag1 = Golden_Apple.Golden_AppleUpdate(variance4, points, speed);
     if(flag1)
     {
         AppleState = true;
         srand(SDL_GetTicks());
         variance4 = rand() % 801 - 300;
-        Golden_Apple.Golden_AppleUpdate(variance4, points);
+        Golden_Apple.Golden_AppleUpdate(variance4, points, speed);
     }
     CollisionDetection();
 }
@@ -266,6 +262,7 @@ void GameLoop::Reset()
 {
 	points = 0;
 	FPS = 16.8;
+	speed = 2.5;
 	variance1 = rand() % 201 - 100;
 	variance2 = rand() % 201 - 100;
 	variance3 = rand() % 201 - 100;
@@ -286,6 +283,7 @@ void GameLoop::Render()
     }else{
         b2.Render(renderer);
     }
+	if(points % 10 == 0 && points >= 10 && speed < 4.5) speed += 0.004; 
 	Pipe_Above1.PipeRender(renderer);
 	Pipe_Below1.PipeRender(renderer);
 	Pipe_Above2.PipeRender(renderer);

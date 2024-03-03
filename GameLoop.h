@@ -39,7 +39,7 @@ private:
 	int variance3 = rand() % 201 - 100;
     int variance4 = rand() % 801 - 300;// Golden Apple
     double FPS = 16.8;
-    double accelerate = 0.005;
+    double speed = 2.5;
     SDL_Window* window;
     SDL_Event event1;
     SDL_Renderer* renderer;

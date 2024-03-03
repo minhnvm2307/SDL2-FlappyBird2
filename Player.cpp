@@ -1,26 +1,15 @@
 #include"Player.h"
 #include<iostream>
 
-void Player::Render(SDL_Renderer* ren)
-{
-	animationTimer1++;
-	if (animationTimer1 < 10)
-	{
-		SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), 0, NULL, SDL_FLIP_NONE);
-	}
-	else if (animationTimer1 >= 10 && animationTimer1 <= 20)
-	{
-		SDL_RenderCopyEx(ren, Tex1, &getSrc(), &getDest(), 0, NULL, SDL_FLIP_NONE);
-	}
-	else if (animationTimer1 > 20)
-	{
-		SDL_RenderCopyEx(ren, Tex1, &getSrc(), &getDest(), 0, NULL, SDL_FLIP_NONE);
-	}
-	if (animationTimer1 > 30)
-	{
-		animationTimer1 = 0;
-	}
-}
+// void Player::RenderDie(SDL_Renderer* ren, double &speed)
+// {
+// 	speed = 0;
+// 	SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), 0, NULL, SDL_FLIP_VERTICAL);
+// 	distance-=;
+// 	setSource(0, 0, 288, 512);
+// 	setDest(distance1, 520, 805, 112);
+	
+// }
 
 void Player::RenderDown(SDL_Renderer* ren)
 {
