@@ -166,7 +166,7 @@ void Background::GroundUpdate1(double &speed)
 	{
 		distance1-=speed;
 		setSource(0, 0, 288, 512);
-		setDest(distance1, 520, 805, 112);
+		setDest(distance1, 520, 805, 115);
 	}
 }
 
@@ -180,7 +180,7 @@ void Background::GroundUpdate2(double &speed)
 	{
 		distance2-=speed;
 		setSource(0, 0, 288, 512);
-		setDest(distance2, 520, 805, 112);
+		setDest(distance2, 520, 805, 115);
 	}
 }
 
@@ -230,7 +230,7 @@ void Background::Reset()
 	pipeDistance1 = 400;
 	pipeDistance2 = 700;
 	pipeDistance3 = 1000;
-    appleDistance = 2000;
+    appleDistance = 3345;
 	incY1 = 0;
 	incY2 = 0;
 	incY3 = 0;

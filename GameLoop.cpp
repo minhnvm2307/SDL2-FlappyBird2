@@ -6,7 +6,7 @@ GameLoop::GameLoop()
     renderer = NULL;
     GameState = false;
     p.setSource(0, 0, 34, 24);
-	p.setDest(50, HEIGHT/2, 55, 35);
+	p.setDest(50, HEIGHT/2, 55, 38);
     ground1.setSource(0, 0, 112, 336);
 	ground1.setDest(0, 520, 112, 805);
 	ground2.setSource(0, 0, 112, 336);
@@ -25,6 +25,12 @@ GameLoop::GameLoop()
 	Pipe_Below3.setDest(1000, 350, 100, 52);
     Golden_Apple.setSource(0, 0, 300, 300);
     Golden_Apple.setDest(1000, 300, 50, 50);
+	cnt1.setSource(0, 0, 24, 36);
+    cnt1.setDest(400, 250, 24, 36);
+	cnt2.setSource(0, 0, 24, 36);
+    cnt2.setDest(400, 250, 24, 36);
+	cnt3.setSource(0, 0, 24, 36);
+    cnt3.setDest(400, 250, 24, 36);
 }
 
 bool GameLoop::getGameState()
@@ -32,17 +38,10 @@ bool GameLoop::getGameState()
     return GameState;
 }
 
-double last = 0;
-void GameLoop::FPSlimit()
+bool GameLoop::getMenuState()
 {
-	double first = SDL_GetTicks();
-        if(first - last < FPS)
-        {
-            SDL_Delay(FPS - (first - last));
-        }
-    last = first;
+	return MenuState;
 }
-
 
 void GameLoop::Intialize()
 {
@@ -50,15 +49,21 @@ void GameLoop::Intialize()
 	IMG_Init(IMG_INIT_PNG);
     TTF_Init();
 	Mix_Init(MIX_INIT_MP3 | MIX_INIT_OPUS | MIX_INIT_OGG);
-	// int result = Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048);
-	// cout << result << endl;
-    // if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 2048) == -1)
-    // {
-    //     cout << "Failed to open audio" << endl;
-    // }else {cout << " Succeed to open audio " << endl;}
-	// //Mix_Music *music = Mix_LoadMUS("Sound/backgroundSound.mp3");
-	// //Mix_PlayMusic(music, -1);
-	// //MusGame.PlayBgMusic("Sound/backgroundSound.mp3");
+	// PLAYING MUSIC//////////////////////////
+    if(Mix_OpenAudioDevice(48000,AUDIO_F32SYS , 2, 4096, NULL, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE | SDL_AUDIO_ALLOW_CHANNELS_CHANGE))
+    {
+        cout << "Failed to open audio" << Mix_GetError() << endl;
+    }else cout << " Succeed to open audio " << endl;
+	music = Mix_LoadMUS("Sound/backgroundSound.mp3");
+	if(music == NULL)
+	{
+		cout << "Failed to load MUS " << Mix_GetError() << endl;
+	}else {
+		cout << "loaded mus" << endl;
+		Mix_PlayMusic(music, -1);
+	}
+	Effectsound = Mix_LoadWAV("Sound/jumpSound.mp3");
+	////////PLAYING MUSIC/////////////////////
     window = SDL_CreateWindow("Flappy MINH", SDL_WINDOWEVENT_ENTER, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
     if(window)
     {
@@ -66,10 +71,7 @@ void GameLoop::Intialize()
         if(renderer)
         {
             cout << "THANH CONG!" <<  endl;
-            GameState = true;
-            p.CreateTexture("Image/bluebird1.png", renderer);
-			p.CreateTexture1("Image/bluebird2.png", renderer);
-			p.CreateTexture2("image/bluebird3.png", renderer);
+			GameState = true;
             b1.CreateTexture("Image/background-day.png", renderer);
             b2.CreateTexture("Image/background-night.png", renderer);
 			ground1.CreateTexture("Image/base.png", renderer);
@@ -81,9 +83,11 @@ void GameLoop::Intialize()
 			Pipe_Above3.CreateTexture("Image/Pipe_Above.png", renderer);
 			Pipe_Below3.CreateTexture("Image/Pipe_Below.png", renderer);
             Golden_Apple.CreateTexture("Image/apple.png", renderer);
+			cnt3.CreateTexture("Image/cnt3.png", renderer);
+			cnt2.CreateTexture("Image/cnt2.png", renderer);
+			cnt1.CreateTexture("Image/cnt1.png", renderer);
 			score.CreateFont("Font/calibrib.ttf", 38);
-			maxScore.CreateFont("Font/calibrib.ttf", 23);
-			//MusGame.CreateMusic("Sound/backgroundSound.mp3");
+			maxScore.CreateFont("Font/calibrib.ttf", 26);
         }
         else
         {
@@ -96,51 +100,39 @@ void GameLoop::Intialize()
     }
 }
 
+void GameLoop::countDown()
+{
+	cnt3.Render(renderer);
+	SDL_RenderPresent(renderer);
+	SDL_Delay(1000);
+	cnt2.Render(renderer);
+	SDL_RenderPresent(renderer);
+	SDL_Delay(1000);
+	cnt1.Render(renderer);
+	SDL_RenderPresent(renderer);
+	SDL_Delay(1000);
+	SDL_RenderClear(renderer);
+}
+
+void GameLoop::menu()
+{
+	Main.makeMenu(renderer);
+	while(!Main.getPlayState())
+	{
+		Main.eventMouse(event1, p, GameState, MenuState, renderer);
+		SDL_RenderClear(renderer);
+		Main.Render(renderer);
+		SDL_RenderPresent(renderer);
+	}
+	if(GameState) countDown();
+}
+
 void GameLoop::Update()
 {
-	// Feeding NeuralNetwork with real time data
-	// neuralNetwork.Update(p.getYpos(), nextCheckPoint);
-
-	// Finding closest Checkpoint !
-	// if (Pipe_Below1.getPipe1X() < Pipe_Below2.getPipe2X() && Pipe_Below1.getPipe1X() < Pipe_Below3.getPipe3X())
-	// {
-	// 	if (Pipe_Below1.getPipe1X() < -5)
-	// 	{
-	// 		nextCheckPoint = Pipe_Below2.getPipe2Y();
-	// 	}
-	// 	else
-	// 	{
-	// 		nextCheckPoint = Pipe_Below1.getPipe1Y();
-	// 	}
-	// }
-	// else if (Pipe_Below2.getPipe2X() < Pipe_Below1.getPipe1X() && Pipe_Below2.getPipe2X() < Pipe_Below3.getPipe3X())
-	// {
-	// 	if (Pipe_Below2.getPipe2X() < -5)
-	// 	{
-	// 		nextCheckPoint = Pipe_Below3.getPipe3Y();
-	// 	}
-	// 	else
-	// 	{
-	// 		nextCheckPoint = Pipe_Below2.getPipe2Y();
-	// 	}
-		
-	// }
-	// else if (Pipe_Below3.getPipe3X() < Pipe_Below1.getPipe1X() && Pipe_Below3.getPipe3X() < Pipe_Below2.getPipe2X())
-	// {
-	// 	if (Pipe_Below3.getPipe3X() < -5)
-	// 	{
-	// 		nextCheckPoint = Pipe_Below1.getPipe1Y();
-	// 	}
-	// 	else
-	// 	{
-	// 		nextCheckPoint = Pipe_Below3.getPipe3Y();
-	// 	}
-		
-	// }
 
     // Scoring Mechanics//////
 	std::string s;
-	s = "Score: " + std::to_string(points);
+	s = " Your Score: " + std::to_string(points);
 	score.Text(s, renderer);
 	s = "BEST SCORE: " + std::to_string(maxPoints);
 	maxScore.Text(s, renderer);
@@ -180,7 +172,7 @@ void GameLoop::Update()
     {
         AppleState = true;
         srand(SDL_GetTicks());
-        variance4 = rand() % 801 - 300;
+        variance4 = rand() % 801 - 200;
         Golden_Apple.Golden_AppleUpdate(variance4, points, speed);
     }
     CollisionDetection();
@@ -196,33 +188,30 @@ void GameLoop::Event()
     }
     if(event1.type == SDL_KEYDOWN)
     {
-        if(event1.key.keysym.sym == SDLK_UP || event1.key.keysym.sym == SDLK_w)
-        {
-            if(!p.JumpState())
+        if(event1.key.keysym.sym == SDLK_SPACE)
+		{
+			if(Mix_PausedMusic())
+			{
+				Mix_ResumeMusic();
+			}else{
+				Mix_PauseMusic();
+			}
+		}
+    }
+	if(event1.type == SDL_MOUSEBUTTONDOWN || event1.type == SDL_KEYDOWN)
+	{
+		if((event1.motion.x < WIDTH && event1.motion.x > 0 && event1.motion.y > 0 && event1.motion.y < HEIGHT) || event1.key.keysym.sym == SDLK_UP){
+			if(!p.JumpState())
             {
                 p.Jump();
+				Mix_PlayChannel(-1, Effectsound, 0);
             }
             else
             {
                 p.Gravity();
             }
-        }
-		else if(event1.key.keysym.sym == SDLK_q) // QUIT the GAME
-		{
-			GameState = false;
 		}
-		// else if(event1.key.keysym.sym == SDLK_SPACE)
-		// {
-		// 	if(Mix_PausedMusic())
-		// 	{
-		// 		Mix_ResumeMusic();
-		// 	}
-		// 	else
-		// 	{
-		// 		Mix_PauseMusic();
-		// 	}
-		// }
-    }
+	}
     else
     {
         p.Gravity(); 
@@ -236,20 +225,18 @@ void GameLoop::CollisionDetection()
 		Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest()) || 
 		Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest()))
 	{
-		SDL_Delay(3000);
 		maxPoints = max(points, maxPoints);
-		// list.Insert(points, generations);
-		// generations++;
-		// neuralNetwork.SaveProgress("Progress.txt", generations);
+		SDL_Delay(3000);
+		Main.gameContinue(renderer, event1, GameState, MenuState, score, maxScore);
+		if(!MenuState && GameState) countDown();
 		Reset();
 	}
 	else if (Collision::CheckCollision(&p.getDest(), &ground1.getDest()) || Collision::CheckCollision(&p.getDest(), &ground2.getDest()) || p.getYpos() < 0)
 	{
-		SDL_Delay(3000);
 		maxPoints = max(points, maxPoints);
-		// list.Insert(points, generations);
-		// generations++;
-		// neuralNetwork.SaveProgress("Progress.txt", generations);
+		SDL_Delay(3000);
+		Main.gameContinue(renderer, event1, GameState, MenuState, score, maxScore);
+		if(!MenuState && GameState) countDown();
 		Reset();
 	}
     else if(Collision::CheckCollision(&p.getDest(), &Golden_Apple.getDest()))
@@ -261,11 +248,12 @@ void GameLoop::CollisionDetection()
 void GameLoop::Reset()
 {
 	points = 0;
-	FPS = 16.8;
-	speed = 2.5;
+	speed = 2.7;
+	//MenuState = true;
 	variance1 = rand() % 201 - 100;
 	variance2 = rand() % 201 - 100;
 	variance3 = rand() % 201 - 100;
+	variance4 = rand() % 801 - 200;
 	p.Reset();
 	Pipe_Above1.Reset();
 	Pipe_Above2.Reset();
@@ -283,7 +271,7 @@ void GameLoop::Render()
     }else{
         b2.Render(renderer);
     }
-	if(points % 10 == 0 && points >= 10 && speed < 4.5) speed += 0.004; 
+	if(points % 7 == 0 && points >= 7 && speed < 4.5) speed += 0.004;
 	Pipe_Above1.PipeRender(renderer);
 	Pipe_Below1.PipeRender(renderer);
 	Pipe_Above2.PipeRender(renderer);
@@ -295,7 +283,7 @@ void GameLoop::Render()
     }
 	ground1.GroundRender(renderer);
 	ground2.GroundRender(renderer);
-    score.Render(renderer, 350, 10);
+    score.Render(renderer, 300, 10);
 	maxScore.Render(renderer, 7, 7);
 	if(!p.JumpState()){
     	p.RenderDown(renderer);
@@ -306,8 +294,10 @@ void GameLoop::Render()
 void GameLoop::Clear()
 {
     score.CloseFont();
+	Mix_HaltMusic();
+	Mix_FreeMusic(music); music = NULL;
+	Mix_FreeChunk(Effectsound); Effectsound = NULL;
 	TTF_Quit();
-	MusGame.CloseMusic();
 	Mix_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

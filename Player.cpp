@@ -1,16 +1,6 @@
 #include"Player.h"
 #include<iostream>
 
-// void Player::RenderDie(SDL_Renderer* ren, double &speed)
-// {
-// 	speed = 0;
-// 	SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), 0, NULL, SDL_FLIP_VERTICAL);
-// 	distance-=;
-// 	setSource(0, 0, 288, 512);
-// 	setDest(distance1, 520, 805, 112);
-	
-// }
-
 void Player::RenderDown(SDL_Renderer* ren)
 {
 animationTimer1++;

@@ -5,7 +5,6 @@ class Player :public Object
 {
 private:
     double gravity = 0.5;
-    //int distance = getDest();
     double Ypos = 256;
     double acceleration = 0;
     bool inJump = false;
@@ -28,5 +27,4 @@ public:
     void Render(SDL_Renderer* ren);
     void RenderUp(SDL_Renderer* ren);
     void RenderDown(SDL_Renderer* ren);
-    void RenderDie(SDL_Renderer* ren, double &speed);
 };

@@ -8,12 +8,13 @@
 #include"Collision.h"
 #include"ScoreText.h"
 #include"Music.h"
+#include"Menu.h"
 using namespace std;
 
 class GameLoop :Background
 {
 private:
-    Player p;
+    Player p, p1, p2;
     Background b1;
     Background b2;
     Background ground1,ground2;
@@ -24,12 +25,15 @@ private:
 	Background Pipe_Above3;
 	Background Pipe_Below3;
     Background Golden_Apple;
+    Background cnt1, cnt2, cnt3;
     TextShow score;
     TextShow maxScore;
     Sound MusGame;
+    menu Main;
     const int HEIGHT = 600;
     const int WIDTH = 800;
     bool GameState;
+    bool MenuState = true;
     bool AppleState = true; // trang thai qua tao
     int points = 0;// DIEM GAME
     int maxPoints = 0;
@@ -37,9 +41,10 @@ private:
 	int variance1 = rand() % 201 - 100;
 	int variance2 = rand() % 201 - 100;
 	int variance3 = rand() % 201 - 100;
-    int variance4 = rand() % 801 - 300;// Golden Apple
-    double FPS = 16.8;
-    double speed = 2.5;
+    int variance4 = rand() % 801 - 200;// Golden Apple
+    double speed = 2.7;
+    Mix_Music *music = NULL;// PLAY BackGround MUSIC
+    Mix_Chunk *Effectsound = NULL;
     SDL_Window* window;
     SDL_Event event1;
     SDL_Renderer* renderer;
@@ -48,13 +53,16 @@ private:
     //SDL_Surface * rotozoomSurface()
 public:
     GameLoop();
+    void menu();
+    void countDown();
     bool getGameState();
+    bool getMenuState();
     void Update();
+    void ScoreUpdate();
     void Reset();
     void Intialize();
     void Event();
     void CollisionDetection();
-    void FPSlimit();
     void Render();
     void Clear();
 };
