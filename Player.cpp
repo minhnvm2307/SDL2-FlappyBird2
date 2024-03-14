@@ -1,6 +1,7 @@
 #include"Player.h"
 #include<iostream>
 
+/// old mechanics////////////
 void Player::RenderDown(SDL_Renderer* ren)
 {
 animationTimer1++;
@@ -41,6 +42,18 @@ animationTimer2++;
 		animationTimer2 = 0;
 	}    
 }
+/////////////////////////////
+
+void Player::Render(SDL_Renderer *ren)
+{
+	angle += 1.1;
+	if(angle > 30) angle = 30;
+	if(speed < 0){
+		SDL_RenderCopyEx(ren, Tex2, &getSrc(), &getDest(), -30, NULL, SDL_FLIP_NONE);// flying
+	}else{
+		SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), angle, NULL, SDL_FLIP_NONE);// failing
+	}
+}
 
 int Player::getYpos()
 {
@@ -51,42 +64,25 @@ void Player::Gravity()
 {
     if(JumpState())
     {
-        acceleration = acceleration + 0.05;
-        jumpHeight = jumpHeight + gravity;
-        Ypos = Ypos + gravity + acceleration + jumpHeight;
-        setDest(50, Ypos, 55, 38);
-        if(jumpHeight > 0)
-        {
-            inJump = false;
-            jumpHeight = -10;
-        }
+        speed = -7;
+		angle = -20;
+		inJump = false;
     }
-    else
-    {
-        acceleration = acceleration + 0.05;
-        Ypos = Ypos + gravity + acceleration;
-        setDest(50, Ypos, 55, 38);  
-    }
-    Ypos = Ypos + gravity;
-    setDest(50, Ypos, 55, 38);
+	speed += a;
+    Ypos += speed;
+    setDest(50, Ypos, 52, 33);
 }
 
 void Player::Jump()
 {
-    acceleration = 0;
     inJump = true;
 }
 
 void Player::Reset()
 {
-	acceleration = 0;
 	Ypos = 256;
-	lastJump = 0;
-}
-
-void Player::GetJumpTime()
-{
-    jumpTimer = SDL_GetTicks();
+	speed = -7;
+	angle = -20;
 }
 
 bool Player::JumpState()
@@ -96,11 +92,11 @@ bool Player::JumpState()
 
 void Player::CreateTexture1(const char*address, SDL_Renderer* ren)
 {
-    Tex1 = TextureManager::Texture(address, ren);
+    Tex1 = TextureManager::Texture(address, ren);// vertical flying
 }
 
 void Player::CreateTexture2(const char*address, SDL_Renderer* ren)
 {
-    Tex2 = TextureManager::Texture(address, ren);
+    Tex2 = TextureManager::Texture(address, ren);// flying up
 }
 

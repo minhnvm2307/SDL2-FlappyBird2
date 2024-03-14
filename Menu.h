@@ -18,7 +18,7 @@ public:
     void makeMenu(SDL_Renderer *ren);
     void eventMouse(SDL_Event& ev, Player &p, bool &GameState, bool &MenuState, SDL_Renderer *renderer);
     void Render(SDL_Renderer* ren);
-    void gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &MenuState, TextShow score, TextShow maxScore);
+    void gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &MenuState, bool &cooldown, TextShow score, TextShow maxScore);
     bool getPlayState();
     void countDown(SDL_Renderer *ren);
 };

@@ -138,13 +138,12 @@ bool Background::Pipe_Below3Update(int incY, double &speed)
 	}
 }
 
-bool Background::Golden_AppleUpdate(int incY, int& score, double &speed)
+bool Background::Golden_AppleUpdate(int incY, double &speed)
 {
     this->incY4 = incY;
     if(appleDistance < -100)
     {
-        appleDistance += 3345;
-        score += 5;
+        appleDistance += 2500;
         return true;
     }
     else
@@ -166,7 +165,7 @@ void Background::GroundUpdate1(double &speed)
 	{
 		distance1-=speed;
 		setSource(0, 0, 288, 512);
-		setDest(distance1, 520, 805, 115);
+		setDest(distance1, 520, 820, 115);
 	}
 }
 
@@ -180,7 +179,7 @@ void Background::GroundUpdate2(double &speed)
 	{
 		distance2-=speed;
 		setSource(0, 0, 288, 512);
-		setDest(distance2, 520, 805, 115);
+		setDest(distance2, 520, 820, 115);
 	}
 }
 

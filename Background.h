@@ -9,7 +9,7 @@ private:
 	double pipeDistance1 = 400;
 	double pipeDistance2 = 700;
 	double pipeDistance3 = 1000;
-    double appleDistance = 3345;
+    double appleDistance = 2500;
 	double incY1 = 0;
 	double incY2 = 0;
 	double incY3 = 0;
@@ -22,7 +22,7 @@ public:
 	bool Pipe_Below2Update(int incY, double &speed);
 	bool Pipe_Above3Update(int incY, int& score, double &speed);
 	bool Pipe_Below3Update(int incY, double &speed);
-    bool Golden_AppleUpdate(int incY, int& score, double &speed);
+    bool Golden_AppleUpdate(int incY, double &speed);
     double getAppleX();
     double getAppleY();
 	double getPipe1X();

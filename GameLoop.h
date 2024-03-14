@@ -1,13 +1,13 @@
 #pragma once
 #include "include/SDL2/SDL.h"
 #include "include/SDL2/SDL_image.h"
+#include"include/SDL2/SDL_mixer.h"
 #include<iostream>
 #include"Object.h"
 #include"Player.h"
 #include"Background.h"
 #include"Collision.h"
 #include"ScoreText.h"
-#include"Music.h"
 #include"Menu.h"
 using namespace std;
 
@@ -28,20 +28,20 @@ private:
     Background cnt1, cnt2, cnt3;
     TextShow score;
     TextShow maxScore;
-    Sound MusGame;
     menu Main;
     const int HEIGHT = 600;
     const int WIDTH = 800;
     bool GameState;
     bool MenuState = true;
     bool AppleState = true; // trang thai qua tao
+    bool cooldownState = false;
     int points = 0;// DIEM GAME
     int maxPoints = 0;
     //int nextCheckPoint = 0;
 	int variance1 = rand() % 201 - 100;
 	int variance2 = rand() % 201 - 100;
 	int variance3 = rand() % 201 - 100;
-    int variance4 = rand() % 801 - 200;// Golden Apple
+    int variance4 = rand() % 751 - 250;// Golden Apple
     double speed = 2.7;
     Mix_Music *music = NULL;// PLAY BackGround MUSIC
     Mix_Chunk *Effectsound = NULL;

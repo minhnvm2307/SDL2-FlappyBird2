@@ -75,7 +75,7 @@ void menu::eventMouse(SDL_Event& ev, Player &p, bool &GameState, bool &MenuState
     }
 }
 
-void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &MenuState, TextShow score, TextShow maxScore)
+void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &MenuState, bool &cooldown, TextShow score, TextShow maxScore)
 {
     endGame.CreateTexture("Image/endGame.png", ren);
     while(1)
@@ -85,6 +85,7 @@ void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &
         if(e.type == SDL_MOUSEBUTTONDOWN)
         {
             if(e.motion.x > 366 && e.motion.x < 427 && e.motion.y > 350 && e.motion.y < 415){
+                cooldown = true;
                 break;// TRY AGAIN BUTTON;
             }else if(e.motion.x > 40 && e.motion.x < 130 && e.motion.y > 530 && e.motion.y < 560){
                 gameState = false;// EXIT BUTTON
@@ -92,6 +93,7 @@ void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &
             }else if(e.motion.x > 10 && e.motion.x < 70 && e.motion.y > 10 && e.motion.y < 70){
                 // HOME BUTTON
                 MenuState = true;// ERRORRRRRRRR/////////////////
+                play = false;
                 break;
             }
         }

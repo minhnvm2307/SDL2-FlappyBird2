@@ -4,20 +4,19 @@
 class Player :public Object
 {
 private:
-    double gravity = 0.5;
     double Ypos = 256;
-    double acceleration = 0;
     bool inJump = false;
-    double jumpHeight = -10;
-    double jumpTimer;
-    double lastJump = 0;
+    // new MECHANICS
+    double speed = -7;
+    double a = 0.3;
+    double angle = -20;
+    /////////////////
     SDL_Texture* Tex1;
     SDL_Texture* Tex2;
     int animationTimer1;
     int animationTimer2;
 public:
     void Gravity();
-    void GetJumpTime();
     void Jump();
     void Reset();
     bool JumpState();
