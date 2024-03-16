@@ -21,15 +21,7 @@ void Background::PipeRender(SDL_Renderer* ren)
 	SDL_RenderCopy(ren, getTexture(), &getSrc(), &getDest());
 }
 
-// bool Background::Apple_Eaten()
-// {
-//     return eat;
-// }
 
-// void Background::SetEat(bool &eat)
-// {
-//     Background::eat = true;
-// }
 
 bool Background::Pipe_Above1Update(int incY, int &score, double &speed)
 {
@@ -143,7 +135,7 @@ bool Background::Golden_AppleUpdate(int incY, double &speed)
     this->incY4 = incY;
     if(appleDistance < -100)
     {
-        appleDistance += 2500;
+        appleDistance += 2650;
         return true;
     }
     else
@@ -163,9 +155,9 @@ void Background::GroundUpdate1(double &speed)
 	}
 	else
 	{
-		distance1-=speed;
+		distance1-=5;
 		setSource(0, 0, 288, 512);
-		setDest(distance1, 520, 820, 115);
+		setDest(distance1, 520, 805, 115);
 	}
 }
 
@@ -177,9 +169,9 @@ void Background::GroundUpdate2(double &speed)
 	}
 	else
 	{
-		distance2-=speed;
+		distance2-=5;
 		setSource(0, 0, 288, 512);
-		setDest(distance2, 520, 820, 115);
+		setDest(distance2, 520, 805, 115);
 	}
 }
 
@@ -229,7 +221,7 @@ void Background::Reset()
 	pipeDistance1 = 400;
 	pipeDistance2 = 700;
 	pipeDistance3 = 1000;
-    appleDistance = 3345;
+    appleDistance = 2650;
 	incY1 = 0;
 	incY2 = 0;
 	incY3 = 0;

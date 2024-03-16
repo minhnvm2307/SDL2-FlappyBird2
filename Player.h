@@ -8,7 +8,7 @@ private:
     bool inJump = false;
     // new MECHANICS
     double speed = -7;
-    double a = 0.3;
+    double a = 0.35;
     double angle = -20;
     /////////////////
     SDL_Texture* Tex1;

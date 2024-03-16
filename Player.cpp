@@ -46,8 +46,8 @@ animationTimer2++;
 
 void Player::Render(SDL_Renderer *ren)
 {
-	angle += 1.1;
-	if(angle > 30) angle = 30;
+	angle += 1.3;
+	if(angle > 50) angle = 50;
 	if(speed < 0){
 		SDL_RenderCopyEx(ren, Tex2, &getSrc(), &getDest(), -30, NULL, SDL_FLIP_NONE);// flying
 	}else{

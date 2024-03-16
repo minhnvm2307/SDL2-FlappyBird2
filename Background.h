@@ -9,7 +9,7 @@ private:
 	double pipeDistance1 = 400;
 	double pipeDistance2 = 700;
 	double pipeDistance3 = 1000;
-    double appleDistance = 2500;
+    double appleDistance = 2650;
 	double incY1 = 0;
 	double incY2 = 0;
 	double incY3 = 0;

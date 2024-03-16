@@ -14,13 +14,13 @@ void TextShow::Text(std::string Text, SDL_Renderer* ren)
 	char* Txt = new char[Text.size() + 1];
 	std::copy(Text.begin(), Text.end(), Txt);
 	Txt[Text.size()] = '\0';
-	SDL_Color color = {255, 255, 255};
+	SDL_Color color = {242, 242, 242};
 	SDL_Surface* textSurface = TTF_RenderText_Solid(font, Txt, color);
 	if (textSurface == NULL)
 	{
 		std::cout << "Khong tao duoc textSolid" << std::endl;
 	}
-	CreateTexture(textSurface ,ren);
+	CreateTexture(textSurface, ren);
 	SDL_FreeSurface(textSurface);
 	delete Txt;
 	Txt = 0;

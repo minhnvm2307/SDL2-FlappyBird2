@@ -12,12 +12,16 @@ private:
     bool play = false;
     Background mainMenu;
     Background endGame;
+    Background choosingBird;
+    Background vItem;
 public:
     menu();
     ~menu();
     void makeMenu(SDL_Renderer *ren);
-    void eventMouse(SDL_Event& ev, Player &p, bool &GameState, bool &MenuState, SDL_Renderer *renderer);
+    void eventMouse(SDL_Event& ev, Player &p, bool &GameState, bool &MenuState, bool &BirdState, SDL_Renderer *renderer);
     void Render(SDL_Renderer* ren);
+    void MakeChoosingBird(SDL_Renderer *ren);
+    void RenderChoosingBird(SDL_Renderer* ren);
     void gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &MenuState, bool &cooldown, TextShow score, TextShow maxScore);
     bool getPlayState();
     void countDown(SDL_Renderer *ren);

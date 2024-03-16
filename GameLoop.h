@@ -25,7 +25,7 @@ private:
 	Background Pipe_Above3;
 	Background Pipe_Below3;
     Background Golden_Apple;
-    Background cnt1, cnt2, cnt3;
+    Background cnt1, cnt2, cnt3, ready;
     TextShow score;
     TextShow maxScore;
     menu Main;
@@ -35,6 +35,7 @@ private:
     bool MenuState = true;
     bool AppleState = true; // trang thai qua tao
     bool cooldownState = false;
+    bool BirdState = false;
     int points = 0;// DIEM GAME
     int maxPoints = 0;
     //int nextCheckPoint = 0;
@@ -42,15 +43,14 @@ private:
 	int variance2 = rand() % 201 - 100;
 	int variance3 = rand() % 201 - 100;
     int variance4 = rand() % 751 - 250;// Golden Apple
-    double speed = 2.7;
+    double speed = 2.8;
     Mix_Music *music = NULL;// PLAY BackGround MUSIC
-    Mix_Chunk *Effectsound = NULL;
+    Mix_Chunk *Jumpsound, *Hitsound, *Getsound;
     SDL_Window* window;
     SDL_Event event1;
     SDL_Renderer* renderer;
     SDL_Texture* player;
     SDL_Texture* background;
-    //SDL_Surface * rotozoomSurface()
 public:
     GameLoop();
     void menu();

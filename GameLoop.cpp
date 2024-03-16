@@ -26,11 +26,13 @@ GameLoop::GameLoop()
     Golden_Apple.setSource(0, 0, 300, 300);
     Golden_Apple.setDest(1000, 300, 50, 50);
 	cnt1.setSource(0, 0, 24, 36);
-    cnt1.setDest(350, 250, 50, 80);
+    cnt1.setDest(378, 210, 50, 80);
 	cnt2.setSource(0, 0, 24, 36);
-    cnt2.setDest(350, 250, 50, 80);
+    cnt2.setDest(378, 210, 50, 80);
 	cnt3.setSource(0, 0, 24, 36);
-    cnt3.setDest(350, 250, 50, 80);
+    cnt3.setDest(378, 210, 50, 80);
+	ready.setSource(0, 0, 183, 171);
+	ready.setDest(270, 300, 260, 160);
 }
 
 bool GameLoop::getGameState()
@@ -62,9 +64,11 @@ void GameLoop::Intialize()
 		cout << "loaded mus" << endl;
 		//Mix_PlayMusic(music, -1);
 	}
-	Effectsound = Mix_LoadWAV("Sound/jumpSound.mp3");
+	Jumpsound = Mix_LoadWAV("Sound/sfx_wing.wav");
+	Hitsound = Mix_LoadWAV("Sound/sfx_hit.wav");
+	Getsound = Mix_LoadWAV("Sound/sfx_point.wav");
 	////////PLAYING MUSIC/////////////////////
-    window = SDL_CreateWindow("Flappy MINH", SDL_WINDOWEVENT_ENTER, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
+    window = SDL_CreateWindow("NguyenVanMinh-23020117", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE);
     if(window)
     {
         renderer = SDL_CreateRenderer(window, -1, 0);
@@ -89,8 +93,10 @@ void GameLoop::Intialize()
 			cnt3.CreateTexture("Image/3.png", renderer);
 			cnt2.CreateTexture("Image/2.png", renderer);
 			cnt1.CreateTexture("Image/1.png", renderer);
-			score.CreateFont("Font/calibrib.ttf", 38);
-			maxScore.CreateFont("Font/calibrib.ttf", 26);
+			ready.CreateTexture("Image/ready.png", renderer);
+			score.CreateFont("Font/Micro5.ttf", 120);
+			maxScore.CreateFont("Font/Micro5.ttf", 40);
+			Main.MakeChoosingBird(renderer);
         }
         else
         {
@@ -106,15 +112,17 @@ void GameLoop::Intialize()
 void GameLoop::countDown()
 {
 	cnt3.GroundRender(renderer);
+	ready.GroundRender(renderer);
 	SDL_RenderPresent(renderer);
 	SDL_Delay(1000);
 	cnt2.GroundRender(renderer);
+	ready.GroundRender(renderer);
 	SDL_RenderPresent(renderer);
 	SDL_Delay(1000);
 	cnt1.GroundRender(renderer);
+	ready.GroundRender(renderer);
 	SDL_RenderPresent(renderer);
 	SDL_Delay(1000);
-	SDL_RenderClear(renderer);
 }
 
 void GameLoop::menu()
@@ -122,12 +130,13 @@ void GameLoop::menu()
 	Main.makeMenu(renderer);
 	while(!Main.getPlayState())
 	{
-		Main.eventMouse(event1, p, GameState, MenuState, renderer);
+		Main.eventMouse(event1, p, GameState, MenuState, BirdState, renderer);
 		SDL_RenderClear(renderer);
 		Main.Render(renderer);
+		if(BirdState) Main.RenderChoosingBird(renderer);
 		SDL_RenderPresent(renderer);
 	}
-	if(GameState) cooldownState = true;//countDown();
+	if(GameState) cooldownState = true;
 }
 
 void GameLoop::Update()
@@ -135,7 +144,7 @@ void GameLoop::Update()
 
     // Scoring Mechanics//////
 	std::string s;
-	s = " Your Score: " + std::to_string(points);
+	s = std::to_string(points);
 	score.Text(s, renderer);
 	s = "BEST SCORE: " + std::to_string(maxPoints);
 	maxScore.Text(s, renderer);
@@ -147,6 +156,7 @@ void GameLoop::Update()
 	flag2 = Pipe_Below1.Pipe_Below1Update(variance1, speed);
 	if (flag1 && flag2)
 	{
+		Mix_PlayChannel(5, Getsound, 0);
 		srand(SDL_GetTicks());
 		variance1 = rand() % 201 - 100;
 		Pipe_Above1.Pipe_Above1Update(variance1, points, speed);
@@ -156,6 +166,7 @@ void GameLoop::Update()
 	flag2 = Pipe_Below2.Pipe_Below2Update(variance2, speed);
 	if (flag1 && flag2)
 	{
+		Mix_PlayChannel(5, Getsound, 0);
 		srand(SDL_GetTicks());
 		variance2 = rand() % 201 - 100;
 		Pipe_Above2.Pipe_Above2Update(variance2, points, speed);
@@ -165,6 +176,7 @@ void GameLoop::Update()
 	flag1 = Pipe_Below3.Pipe_Below3Update(variance3, speed);
 	if (flag1 && flag2)
 	{
+		Mix_PlayChannel(5, Getsound, 0);
 		srand(SDL_GetTicks());
 		variance3 = rand() % 201 - 100;
 		Pipe_Above3.Pipe_Above3Update(variance3, points, speed);
@@ -173,6 +185,7 @@ void GameLoop::Update()
     flag1 = Golden_Apple.Golden_AppleUpdate(variance4, speed);
     if(flag1)
     {
+		Mix_PlayChannel(5, Getsound, 0);
         AppleState = true;
         srand(SDL_GetTicks());
         variance4 = rand() % 751 - 250;
@@ -206,7 +219,7 @@ void GameLoop::Event()
 			if(!p.JumpState())
             {
                 p.Jump();
-				Mix_PlayChannel(-1, Effectsound, 0);
+				Mix_PlayChannel(1, Jumpsound, 0);
             }
             else
             {
@@ -227,14 +240,20 @@ void GameLoop::CollisionDetection()
 		Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest()) || 
 		Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest()))
 	{
+		Mix_PlayChannel(2, Hitsound, 0);
 		maxPoints = max(points, maxPoints);
+		std::string s = "BEST SCORE: " + std::to_string(maxPoints);
+		maxScore.Text(s, renderer);
 		SDL_Delay(3000);
 		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, score, maxScore);
 		Reset();
 	}
 	else if (Collision::CheckCollision(&p.getDest(), &ground1.getDest()) || Collision::CheckCollision(&p.getDest(), &ground2.getDest()) || p.getYpos() < 0)
 	{
+		Mix_PlayChannel(2, Hitsound, 0);
 		maxPoints = max(points, maxPoints);
+		std::string s = "BEST SCORE: " + std::to_string(maxPoints);
+		maxScore.Text(s, renderer);
 		SDL_Delay(3000);
 		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, score, maxScore);
 		Reset();
@@ -248,7 +267,7 @@ void GameLoop::CollisionDetection()
 void GameLoop::Reset()
 {
 	points = 0;
-	speed = 2.7;
+	speed = 2.8;
 	variance1 = rand() % 201 - 100;
 	variance2 = rand() % 201 - 100;
 	variance3 = rand() % 201 - 100;
@@ -265,12 +284,13 @@ void GameLoop::Reset()
 void GameLoop::Render()
 {
     SDL_RenderClear(renderer);
+	if(cooldownState) Reset();
     if((points / 15) % 2 == 0){
 	    b1.Render(renderer);
     }else{
         b2.Render(renderer);
     }
-	if(points % 2 == 0 && speed < 5) speed += 0.001;
+	speed += 0.0005f;
 	Pipe_Above1.PipeRender(renderer);
 	Pipe_Below1.PipeRender(renderer);
 	Pipe_Above2.PipeRender(renderer);
@@ -282,14 +302,15 @@ void GameLoop::Render()
     }
 	ground1.GroundRender(renderer);
 	ground2.GroundRender(renderer);
-    score.Render(renderer, 300, 10);
+    score.Render(renderer, 390, 10);
 	maxScore.Render(renderer, 7, 7);
 	p.Render(renderer);
-    SDL_RenderPresent(renderer);
+    
 	if(!MenuState && GameState && cooldownState) {
 		countDown();
 		cooldownState = false;
 	}
+	SDL_RenderPresent(renderer);
 }
 
 void GameLoop::Clear()
@@ -297,7 +318,9 @@ void GameLoop::Clear()
     score.CloseFont();
 	Mix_HaltMusic();
 	Mix_FreeMusic(music); music = NULL;
-	Mix_FreeChunk(Effectsound); Effectsound = NULL;
+	Mix_FreeChunk(Jumpsound); Jumpsound = NULL;
+	Mix_FreeChunk(Hitsound); Hitsound = NULL;
+	Mix_FreeChunk(Getsound); Getsound = NULL;
 	TTF_Quit();
 	Mix_Quit();
     SDL_DestroyRenderer(renderer);
