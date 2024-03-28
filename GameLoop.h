@@ -14,7 +14,7 @@ using namespace std;
 class GameLoop :Background
 {
 private:
-    Player p, p1, p2;
+    Player p, p1, p2, armor;
     Background b1;
     Background b2;
     Background ground1,ground2;
@@ -38,11 +38,14 @@ private:
     bool BirdState = false;
     int points = 0;// DIEM GAME
     int maxPoints = 0;
-    //int nextCheckPoint = 0;
+    int shield = 0;
 	int variance1 = rand() % 201 - 100;
 	int variance2 = rand() % 201 - 100;
 	int variance3 = rand() % 201 - 100;
     int variance4 = rand() % 751 - 250;// Golden Apple
+    int var1 = rand() % 60 + 30;
+	int var2 = rand() % 60 + 30;
+	int var3 = rand() % 60 + 30;
     double speed = 2.8;
     Mix_Music *music = NULL;// PLAY BackGround MUSIC
     Mix_Chunk *Jumpsound, *Hitsound, *Getsound;

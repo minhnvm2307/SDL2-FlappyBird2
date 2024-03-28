@@ -5,5 +5,6 @@
 class Collision
 {
 public:
-	static bool CheckCollision(SDL_Rect* A, SDL_Rect* B);
+	static bool CheckCollision(SDL_Rect* A, SDL_Rect* B, int& shield);
+	static bool CheckAppleCollision(SDL_Rect* A, SDL_Rect* B);
 };

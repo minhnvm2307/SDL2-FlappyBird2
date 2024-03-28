@@ -22,25 +22,10 @@ animationTimer1++;
 		animationTimer1 = 0;
 	}}
 
-void Player::RenderUp(SDL_Renderer* ren)
+void Player::RenderShield(SDL_Renderer* ren)
 {
-animationTimer2++;
-	if (animationTimer2 < 15)
-	{
-		SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), -25, NULL, SDL_FLIP_NONE);
-	}
-	else if (animationTimer2 >= 15 && animationTimer2 <= 30)
-	{
-		SDL_RenderCopyEx(ren, Tex1, &getSrc(), &getDest(), -25, NULL, SDL_FLIP_NONE);
-	}
-	else if (animationTimer2 > 30)
-	{
-		SDL_RenderCopyEx(ren, Tex2, &getSrc(), &getDest(), -25, NULL, SDL_FLIP_NONE);
-	}
-	if (animationTimer2 > 45)
-	{
-		animationTimer2 = 0;
-	}    
+	SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), ang+=3, NULL, SDL_FLIP_NONE);
+	ang%=360;
 }
 /////////////////////////////
 
@@ -71,6 +56,19 @@ void Player::Gravity()
 	speed += a;
     Ypos += speed;
     setDest(50, Ypos, 52, 33);
+}
+
+void Player::ArmorGravity()
+{
+    if(JumpState())
+    {
+        speed = -7;
+		angle = -20;
+		inJump = false;
+    }
+	speed += a;
+    Ypos += speed;
+    setDest(32, Ypos-24, 87, 75);
 }
 
 void Player::Jump()

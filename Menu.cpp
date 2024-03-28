@@ -46,17 +46,17 @@ void menu::eventMouse(SDL_Event& ev, Player &p, bool &GameState, bool &MenuState
         play = true;
     }
     if(ev.type == SDL_MOUSEBUTTONDOWN){
-        if(ev.motion.x > 350 && ev.motion.x < 453 && ev.motion.y > 368 && ev.motion.y < 425 && BirdState==false)//  PLAY BUTTON ///////////////////////////////////
+        if(ev.motion.x > 350 && ev.motion.x < 453 && ev.motion.y > 368 && ev.motion.y < 425 && BirdState==false)//  PLAY BUTTON 
         {
             MenuState = false;
             play = true;
 
         }
-        else if(ev.motion.x > 350 && ev.motion.x < 453 && ev.motion.y > 440 && ev.motion.y < 475)
+        else if(ev.motion.x > 350 && ev.motion.x < 453 && ev.motion.y > 440 && ev.motion.y < 475)//OPEN MENU BIRD
         {
             BirdState = true;
         }
-        else if(ev.motion.x > 150 && ev.motion.x < 190 && ev.motion.y > 260 && ev.motion.y < 290)
+        else if(ev.motion.x > 150 && ev.motion.x < 190 && ev.motion.y > 260 && ev.motion.y < 290)//CLOSE MENU BIRD
         {
             BirdState = false;
         }

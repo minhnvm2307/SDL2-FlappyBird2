@@ -6,6 +6,10 @@ class Background :public Object
 private:
 	double distance1 = 0;
 	double distance2 = 805;
+	double height = 0; int sped = 1;// pipe 3
+	double height3 = 0; int sped3 = 1;// pipe1
+	double height2 = 0; int sped2 = 1;// pipe 2
+	int ceil1 = 0, ceil2 = 0, ceil3 = 0;
 	double pipeDistance1 = 400;
 	double pipeDistance2 = 700;
 	double pipeDistance3 = 1000;
@@ -16,12 +20,12 @@ private:
     double incY4 = 0;
     
 public:
-	bool Pipe_Above1Update(int incY, int &score, double &speed);
-	bool Pipe_Below1Update(int incY, double &speed);
-	bool Pipe_Above2Update(int incY, int& score, double &speed);
-	bool Pipe_Below2Update(int incY, double &speed);
-	bool Pipe_Above3Update(int incY, int& score, double &speed);
-	bool Pipe_Below3Update(int incY, double &speed);
+	bool Pipe_Above1Update(int incY, int ceil, int &score, double &speed);
+	bool Pipe_Below1Update(int incY, int ceil, double &speed);
+	bool Pipe_Above2Update(int incY, int ceil, int& score, double &speed);
+	bool Pipe_Below2Update(int incY, int ceil, double &speed);
+	bool Pipe_Above3Update(int incY, int ceil, int& score, double &speed);
+	bool Pipe_Below3Update(int incY, int ceil, double &speed);
     bool Golden_AppleUpdate(int incY, double &speed);
     double getAppleX();
     double getAppleY();

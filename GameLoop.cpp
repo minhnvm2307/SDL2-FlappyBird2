@@ -7,6 +7,8 @@ GameLoop::GameLoop()
     GameState = false;
     p.setSource(0, 0, 34, 24);
 	p.setDest(50, HEIGHT/2, 55, 34);
+	armor.setSource(0, 0, 56, 50);
+	armor.setDest(50, HEIGHT/2, 60, 60);
     ground1.setSource(0, 0, 112, 336);
 	ground1.setDest(0, 520, 112, 805);
 	ground2.setSource(0, 0, 112, 336);
@@ -79,6 +81,7 @@ void GameLoop::Intialize()
 			p.CreateTexture("Image/bird1.png", renderer);
 		    p.CreateTexture1("Image/bird2.png", renderer);
 		    p.CreateTexture2("Image/bird3.png", renderer);
+			armor.CreateTexture("Image/shield.png", renderer);
             b1.CreateTexture("Image/background-day.png", renderer);
             b2.CreateTexture("Image/background-night.png", renderer);
 			ground1.CreateTexture("Image/base.png", renderer);
@@ -141,7 +144,6 @@ void GameLoop::menu()
 
 void GameLoop::Update()
 {
-
     // Scoring Mechanics//////
 	std::string s;
 	s = std::to_string(points);
@@ -152,35 +154,41 @@ void GameLoop::Update()
 	bool flag1 = false, flag2 = false;
 	ground1.GroundUpdate1(speed);
 	ground2.GroundUpdate2(speed);
-	flag1 = Pipe_Above1.Pipe_Above1Update(variance1, points, speed);
-	flag2 = Pipe_Below1.Pipe_Below1Update(variance1, speed);
+	flag1 = Pipe_Above1.Pipe_Above1Update(variance1, var1, points, speed);
+	flag2 = Pipe_Below1.Pipe_Below1Update(variance1, var1, speed);
 	if (flag1 && flag2)
 	{
+		if(shield>0) shield--;
 		Mix_PlayChannel(5, Getsound, 0);
 		srand(SDL_GetTicks());
 		variance1 = rand() % 201 - 100;
-		Pipe_Above1.Pipe_Above1Update(variance1, points, speed);
-		Pipe_Below1.Pipe_Below1Update(variance1, speed);
+		var1 = rand() % 60 + 30; 
+		Pipe_Above1.Pipe_Above1Update(variance1, var1, points, speed);
+		Pipe_Below1.Pipe_Below1Update(variance1, var1, speed);
 	}
-	flag1 = Pipe_Above2.Pipe_Above2Update(variance2, points, speed);
-	flag2 = Pipe_Below2.Pipe_Below2Update(variance2, speed);
+	flag1 = Pipe_Above2.Pipe_Above2Update(variance2, var2, points, speed);
+	flag2 = Pipe_Below2.Pipe_Below2Update(variance2, var2, speed);
 	if (flag1 && flag2)
 	{
+		if(shield>0) shield--;
 		Mix_PlayChannel(5, Getsound, 0);
 		srand(SDL_GetTicks());
 		variance2 = rand() % 201 - 100;
-		Pipe_Above2.Pipe_Above2Update(variance2, points, speed);
-		Pipe_Below2.Pipe_Below2Update(variance2, speed);
+		var2 = rand() % 60 + 30;
+		Pipe_Above2.Pipe_Above2Update(variance2, var2, points, speed);
+		Pipe_Below2.Pipe_Below2Update(variance2, var2, speed);
 	}
-	flag1 = Pipe_Above3.Pipe_Above3Update(variance3, points, speed);
-	flag1 = Pipe_Below3.Pipe_Below3Update(variance3, speed);
+	flag1 = Pipe_Above3.Pipe_Above3Update(variance3, var3, points, speed);
+	flag1 = Pipe_Below3.Pipe_Below3Update(variance3, var3, speed);
 	if (flag1 && flag2)
 	{
+		if(shield) shield--;
 		Mix_PlayChannel(5, Getsound, 0);
 		srand(SDL_GetTicks());
 		variance3 = rand() % 201 - 100;
-		Pipe_Above3.Pipe_Above3Update(variance3, points, speed);
-		Pipe_Below3.Pipe_Below3Update(variance3, speed);
+		var3 = rand() % 60 + 30;
+		Pipe_Above3.Pipe_Above3Update(variance3, var3, points, speed);
+		Pipe_Below3.Pipe_Below3Update(variance3, var3, speed);
 	}
     flag1 = Golden_Apple.Golden_AppleUpdate(variance4, speed);
     if(flag1)
@@ -219,26 +227,27 @@ void GameLoop::Event()
 			if(!p.JumpState())
             {
                 p.Jump();
+				armor.Jump();
 				Mix_PlayChannel(1, Jumpsound, 0);
             }
             else
             {
                 p.Gravity();
+				armor.ArmorGravity();
             }
 		}
 	}
     else
     {
         p.Gravity(); 
+		armor.ArmorGravity();
 
     }
 }
 
 void GameLoop::CollisionDetection()
 {
-	if (Collision::CheckCollision(&p.getDest(), &Pipe_Above1.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below1.getDest()) || 
-		Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest()) || 
-		Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest()) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest()))
+	if (Collision::CheckCollision(&p.getDest(), &Pipe_Above1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest(), shield))
 	{
 		Mix_PlayChannel(2, Hitsound, 0);
 		maxPoints = max(points, maxPoints);
@@ -248,7 +257,7 @@ void GameLoop::CollisionDetection()
 		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, score, maxScore);
 		Reset();
 	}
-	else if (Collision::CheckCollision(&p.getDest(), &ground1.getDest()) || Collision::CheckCollision(&p.getDest(), &ground2.getDest()) || p.getYpos() < 0)
+	else if (Collision::CheckAppleCollision(&p.getDest(), &ground1.getDest()) || Collision::CheckAppleCollision(&p.getDest(), &ground2.getDest()) || p.getYpos() < 0)
 	{
 		Mix_PlayChannel(2, Hitsound, 0);
 		maxPoints = max(points, maxPoints);
@@ -258,21 +267,26 @@ void GameLoop::CollisionDetection()
 		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, score, maxScore);
 		Reset();
 	}
-    else if(Collision::CheckCollision(&p.getDest(), &Golden_Apple.getDest()))
+    else if(Collision::CheckAppleCollision(&p.getDest(), &Golden_Apple.getDest()))
     {
         AppleState = false;
+		shield = 4; // invisible through 5 pipes
     }
 }
 
 void GameLoop::Reset()
 {
 	points = 0;
+	shield = 0;
 	speed = 2.8;
 	variance1 = rand() % 201 - 100;
 	variance2 = rand() % 201 - 100;
 	variance3 = rand() % 201 - 100;
 	variance4 = rand() % 751 - 250;
-	p.Reset();
+	var1 = rand() % 60 + 30;
+	var2 = rand() % 60 + 30;
+	var3 = rand() % 60 + 30;
+	p.Reset(); armor.Reset();
 	Pipe_Above1.Reset();
 	Pipe_Above2.Reset();
 	Pipe_Above3.Reset();
@@ -305,7 +319,7 @@ void GameLoop::Render()
     score.Render(renderer, 390, 10);
 	maxScore.Render(renderer, 7, 7);
 	p.Render(renderer);
-    
+    if(shield) armor.RenderShield(renderer);
 	if(!MenuState && GameState && cooldownState) {
 		countDown();
 		cooldownState = false;

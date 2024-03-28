@@ -23,109 +23,133 @@ void Background::PipeRender(SDL_Renderer* ren)
 
 
 
-bool Background::Pipe_Above1Update(int incY, int &score, double &speed)
+bool Background::Pipe_Above1Update(int incY, int ceil, int &score, double &speed)
 {
 	this->incY1 = incY;
+	this->ceil1 = ceil;
 	if (pipeDistance1 <= -100)
 	{
 		pipeDistance1 += 900;
+		height3 = 0;
 		score++;
 		return true;
 	}
 	else
 	{
 		pipeDistance1 -= speed;
+		height3 += sped3; 
+		if(height3 >= ceil1 || height3<= ceil1-90) sped3*=-1;
 		setSource(0, 0, 52, 320);
-		setDest(pipeDistance1, -200 + this->incY1, 52, 400);
+		setDest(pipeDistance1, -200 + this->incY1 + height3, 52, 400);
 		return false;
 	}
 }
 
-bool Background::Pipe_Below1Update(int incY, double &speed)
+bool Background::Pipe_Below1Update(int incY, int ceil, double &speed)
 {
 	this->incY1 = incY;
+	this->ceil1 = ceil;
 	if (pipeDistance1 <= -100)
 	{
 		pipeDistance1 += 900;
+		height3 = 0;
 		return true;
 	}
 	else
 	{
 		pipeDistance1 -=speed;
+		height3 += sped3; 
+		if(height3 >= ceil1 || height3<= ceil1-90) sped3*=-1;
 		setSource(0, 0, 52, 320);
-		setDest(pipeDistance1, 350 + this->incY1, 52, 400);
+		setDest(pipeDistance1, 350 + this->incY1 + height3, 52, 400);
 		return false;
 	}
 }
 
-bool Background::Pipe_Above2Update(int incY, int &score, double &speed)
+bool Background::Pipe_Above2Update(int incY, int ceil, int &score, double &speed)
 {
 	this->incY2 = incY;
+	this->ceil2 = ceil;
 	if (pipeDistance2 <= -100)
 	{
 		pipeDistance2 += 900;
+		height2 = 0;
 		score++;
 		return true;
 	}
 	else
 	{
 		pipeDistance2-=speed;
+		height2 += sped2; 
+		if(height2 >= ceil2 || height2<= ceil2-90) sped2*=-1;
 		setSource(0, 0, 52, 320);
-		setDest(pipeDistance2, -200 + this->incY2, 52, 400);
+		setDest(pipeDistance2, -200 + this->incY2 + height2, 52, 400);
 		return false;
 	}
 }
 
-bool Background::Pipe_Below2Update(int incY, double &speed)
+bool Background::Pipe_Below2Update(int incY, int ceil, double &speed)
 {
 	this->incY2 = incY;
+	this->ceil2 = ceil;
 	if (pipeDistance2 <= -100)
 	{
 		pipeDistance2 += 900;
+		height2 = 0;
 		return true;
 	}
 	else
 	{
 		pipeDistance2 -= speed;
+		height2 += sped2; 
+		if(height2 >= ceil2 || height2<= ceil2-90) sped2*=-1;
 		setSource(0, 0, 52, 320);
-		setDest(pipeDistance2, 350 + this->incY2, 52, 400);
+		setDest(pipeDistance2, 350 + this->incY2 + height2, 52, 400);
 		return false;
 	}
 }
 
-bool Background::Pipe_Above3Update(int incY, int &score, double &speed)
+bool Background::Pipe_Above3Update(int incY, int ceil, int &score, double &speed)
 {
 	this->incY3 = incY;
+	this->ceil3 = ceil;
 	if (pipeDistance3 <= -100)
 	{
 		pipeDistance3 += 900;
 		pipeDistance3-=speed;
+		height = 2;
 		score++;
 		return true;
 	}
 	else
 	{
 		pipeDistance3 -= speed;
+		height += sped; 
+		if(height >= ceil3 || height<= ceil3-90) sped*=-1;
 		setSource(0, 0, 52, 320);
-		setDest(pipeDistance3, -200 + this->incY3, 52, 400);
+		setDest(pipeDistance3, -200 + this->incY3 + height, 52, 400);
 		return false;
 	}
 }
 
-bool Background::Pipe_Below3Update(int incY, double &speed)
+bool Background::Pipe_Below3Update(int incY, int ceil, double &speed)
 {
 	this->incY3 = incY;
+	this->ceil3 = ceil;
 	if (pipeDistance3 <= -100)
 	{
 		pipeDistance3 += 900;
 		pipeDistance3-=speed;
+		height = 0;
 		return true;
 	}
 	else
 	{
 		pipeDistance3-=speed;
+		height += sped; 
+		if(height >= ceil3 || height<= ceil3-90) sped*=-1;
 		setSource(0, 0, 52, 320);
-		setDest(pipeDistance3, 350 + this->incY3, 52, 400);
+		setDest(pipeDistance3, 350 + this->incY3 + height, 52, 400);
 		return false;
 	}
 }
@@ -176,45 +200,45 @@ void Background::GroundUpdate2(double &speed)
 }
 
 
-double Background::getPipe1Y()
-{
-	return 300 + this->incY1;
-}
+// double Background::getPipe1Y()
+// {
+// 	return 300 + this->incY1;
+// }
 
-double Background::getPipe1X()
-{
-	return pipeDistance1;
-}
+// double Background::getPipe1X()
+// {
+// 	return pipeDistance1;
+// }
 
-double Background::getPipe2Y()
-{
-	return 300 + this->incY2;
-}
+// double Background::getPipe2Y()
+// {
+// 	return 300 + this->incY2;
+// }
 
-double Background::getPipe2X()
-{
-	return pipeDistance2;
-}
+// double Background::getPipe2X()
+// {
+// 	return pipeDistance2;
+// }
 
-double Background::getPipe3Y()
-{
-	return 300 + this->incY3;
-}
+// double Background::getPipe3Y()
+// {
+// 	return 300 + this->incY3;
+// }
 
-double Background::getPipe3X()
-{
-	return pipeDistance3;
-}
+// double Background::getPipe3X()
+// {
+// 	return pipeDistance3;
+// }
 
-double Background::getAppleY()
-{
-    return 400 + this->incY4;
-}
+// double Background::getAppleY()
+// {
+//     return 400 + this->incY4;
+// }
 
-double Background::getAppleX()
-{
-    return appleDistance;
-}
+// double Background::getAppleX()
+// {
+//     return appleDistance;
+// }
 
 void Background::Reset()
 {
@@ -222,6 +246,8 @@ void Background::Reset()
 	pipeDistance2 = 700;
 	pipeDistance3 = 1000;
     appleDistance = 2650;
+	ceil1 = 0; ceil2 = 0; ceil3 = 0;
+	height2 = 0; height3 = 0; height = 0;
 	incY1 = 0;
 	incY2 = 0;
 	incY3 = 0;
