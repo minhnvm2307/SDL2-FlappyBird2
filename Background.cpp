@@ -21,12 +21,13 @@ void Background::PipeRender(SDL_Renderer* ren)
 	SDL_RenderCopy(ren, getTexture(), &getSrc(), &getDest());
 }
 
-
-
-bool Background::Pipe_Above1Update(int incY, int ceil, int &score, double &speed)
+bool Background::Pipe_Above1Update(int incY, int ceil, int &score, double &speed, bool &hard)
 {
 	this->incY1 = incY;
 	this->ceil1 = ceil;
+	if(hard) {
+		sped3 = 0;
+	}
 	if (pipeDistance1 <= -100)
 	{
 		pipeDistance1 += 900;
@@ -45,10 +46,13 @@ bool Background::Pipe_Above1Update(int incY, int ceil, int &score, double &speed
 	}
 }
 
-bool Background::Pipe_Below1Update(int incY, int ceil, double &speed)
+bool Background::Pipe_Below1Update(int incY, int ceil, double &speed, bool &hard)
 {
 	this->incY1 = incY;
 	this->ceil1 = ceil;
+	if(hard) {
+		sped3 = 0;
+	}
 	if (pipeDistance1 <= -100)
 	{
 		pipeDistance1 += 900;
@@ -66,10 +70,13 @@ bool Background::Pipe_Below1Update(int incY, int ceil, double &speed)
 	}
 }
 
-bool Background::Pipe_Above2Update(int incY, int ceil, int &score, double &speed)
+bool Background::Pipe_Above2Update(int incY, int ceil, int &score, double &speed, bool &hard)
 {
 	this->incY2 = incY;
 	this->ceil2 = ceil;
+	if(hard) {
+		sped2 = 0;
+	}
 	if (pipeDistance2 <= -100)
 	{
 		pipeDistance2 += 900;
@@ -88,10 +95,13 @@ bool Background::Pipe_Above2Update(int incY, int ceil, int &score, double &speed
 	}
 }
 
-bool Background::Pipe_Below2Update(int incY, int ceil, double &speed)
+bool Background::Pipe_Below2Update(int incY, int ceil, double &speed, bool &hard)
 {
 	this->incY2 = incY;
 	this->ceil2 = ceil;
+	if(hard) {
+		sped2 = 0;
+	}
 	if (pipeDistance2 <= -100)
 	{
 		pipeDistance2 += 900;
@@ -109,10 +119,13 @@ bool Background::Pipe_Below2Update(int incY, int ceil, double &speed)
 	}
 }
 
-bool Background::Pipe_Above3Update(int incY, int ceil, int &score, double &speed)
+bool Background::Pipe_Above3Update(int incY, int ceil, int &score, double &speed, bool &hard)
 {
 	this->incY3 = incY;
 	this->ceil3 = ceil;
+	if(hard) {
+		sped = 0;
+	}
 	if (pipeDistance3 <= -100)
 	{
 		pipeDistance3 += 900;
@@ -132,10 +145,13 @@ bool Background::Pipe_Above3Update(int incY, int ceil, int &score, double &speed
 	}
 }
 
-bool Background::Pipe_Below3Update(int incY, int ceil, double &speed)
+bool Background::Pipe_Below3Update(int incY, int ceil, double &speed, bool &hard)
 {
 	this->incY3 = incY;
 	this->ceil3 = ceil;
+	if(hard) {
+		sped = 0;
+	}
 	if (pipeDistance3 <= -100)
 	{
 		pipeDistance3 += 900;
@@ -200,40 +216,40 @@ void Background::GroundUpdate2(double &speed)
 }
 
 
-// double Background::getPipe1Y()
-// {
-// 	return 300 + this->incY1;
-// }
+double Background::getPipe1Y()
+{
+	return 300 + this->incY1;
+}
 
-// double Background::getPipe1X()
-// {
-// 	return pipeDistance1;
-// }
+double Background::getPipe1X()
+{
+	return pipeDistance1;
+}
 
-// double Background::getPipe2Y()
-// {
-// 	return 300 + this->incY2;
-// }
+double Background::getPipe2Y()
+{
+	return 300 + this->incY2;
+}
 
-// double Background::getPipe2X()
-// {
-// 	return pipeDistance2;
-// }
+double Background::getPipe2X()
+{
+	return pipeDistance2;
+}
 
-// double Background::getPipe3Y()
-// {
-// 	return 300 + this->incY3;
-// }
+double Background::getPipe3Y()
+{
+	return 300 + this->incY3;
+}
 
-// double Background::getPipe3X()
-// {
-// 	return pipeDistance3;
-// }
+double Background::getPipe3X()
+{
+	return pipeDistance3;
+}
 
-// double Background::getAppleY()
-// {
-//     return 400 + this->incY4;
-// }
+double Background::getAppleY()
+{
+    return 400 + this->incY4;
+}
 
 // double Background::getAppleX()
 // {
@@ -248,6 +264,7 @@ void Background::Reset()
     appleDistance = 2650;
 	ceil1 = 0; ceil2 = 0; ceil3 = 0;
 	height2 = 0; height3 = 0; height = 0;
+	sped = 1; sped2 =1; sped3 = 1;
 	incY1 = 0;
 	incY2 = 0;
 	incY3 = 0;

@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include<iostream>
 
 class Background :public Object
 {
@@ -20,12 +21,12 @@ private:
     double incY4 = 0;
     
 public:
-	bool Pipe_Above1Update(int incY, int ceil, int &score, double &speed);
-	bool Pipe_Below1Update(int incY, int ceil, double &speed);
-	bool Pipe_Above2Update(int incY, int ceil, int& score, double &speed);
-	bool Pipe_Below2Update(int incY, int ceil, double &speed);
-	bool Pipe_Above3Update(int incY, int ceil, int& score, double &speed);
-	bool Pipe_Below3Update(int incY, int ceil, double &speed);
+	bool Pipe_Above1Update(int incY, int ceil, int &score, double &speed, bool &hard);
+	bool Pipe_Below1Update(int incY, int ceil, double &speed, bool &hard);
+	bool Pipe_Above2Update(int incY, int ceil, int& score, double &speed, bool &hard);
+	bool Pipe_Below2Update(int incY, int ceil, double &speed, bool &hard);
+	bool Pipe_Above3Update(int incY, int ceil, int& score, double &speed, bool &hard);
+	bool Pipe_Below3Update(int incY, int ceil, double &speed, bool &hard);
     bool Golden_AppleUpdate(int incY, double &speed);
     double getAppleX();
     double getAppleY();
@@ -42,5 +43,4 @@ public:
 	void GroundRender(SDL_Renderer* ren);
 	void GoldenAppleRender(SDL_Renderer* ren);
 	void PipeRender(SDL_Renderer* ren);
-
 };

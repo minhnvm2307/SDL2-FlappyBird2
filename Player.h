@@ -19,6 +19,7 @@ private:
     const SDL_Point bird_position = {10, int(Ypos/2)};
 public:
     void Gravity();
+    void Fall(SDL_Renderer * ren);
     void ArmorGravity();
     void Jump();
     void Reset();
@@ -28,5 +29,6 @@ public:
     void CreateTexture2(const char* address, SDL_Renderer* ren);
     void Render(SDL_Renderer* ren);
     void RenderShield(SDL_Renderer* ren);
-    void RenderDown(SDL_Renderer* ren);
+    void RenderFall(SDL_Renderer* ren);
+    
 };

@@ -36,6 +36,8 @@ private:
     bool AppleState = true; // trang thai qua tao
     bool cooldownState = false;
     bool BirdState = false;
+    bool hard = 1;// DIFFICULTY STATE
+    bool pDeath = 0;
     int points = 0;// DIEM GAME
     int maxPoints = 0;
     int shield = 0;
@@ -54,6 +56,7 @@ private:
     SDL_Renderer* renderer;
     SDL_Texture* player;
     SDL_Texture* background;
+    SDL_Color white = {242, 242, 242};
 public:
     GameLoop();
     void menu();
@@ -61,7 +64,7 @@ public:
     bool getGameState();
     bool getMenuState();
     void Update();
-    void ScoreUpdate();
+    void AIflappy();
     void Reset();
     void Intialize();
     void Event();

@@ -58,13 +58,13 @@ void GameLoop::Intialize()
     {
         cout << "Failed to open audio" << Mix_GetError() << endl;
     }else cout << " Succeed to open audio " << endl;
-	music = Mix_LoadMUS("Sound/backgroundSound.mp3");
+	music = Mix_LoadMUS("Sound/backgroundSound2.mp3");
 	if(music == NULL)
 	{
 		cout << "Failed to load MUS " << Mix_GetError() << endl;
 	}else {
 		cout << "loaded mus" << endl;
-		//Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, -1);
 	}
 	Jumpsound = Mix_LoadWAV("Sound/sfx_wing.wav");
 	Hitsound = Mix_LoadWAV("Sound/sfx_hit.wav");
@@ -100,6 +100,8 @@ void GameLoop::Intialize()
 			score.CreateFont("Font/Micro5.ttf", 120);
 			maxScore.CreateFont("Font/Micro5.ttf", 40);
 			Main.MakeChoosingBird(renderer);
+			Main.makeMenu(renderer);
+			Main.makeSetting(renderer);
         }
         else
         {
@@ -130,10 +132,9 @@ void GameLoop::countDown()
 
 void GameLoop::menu()
 {
-	Main.makeMenu(renderer);
 	while(!Main.getPlayState())
 	{
-		Main.eventMouse(event1, p, GameState, MenuState, BirdState, renderer);
+		Main.eventMouse(event1, p, GameState, MenuState, BirdState, hard, renderer);
 		SDL_RenderClear(renderer);
 		Main.Render(renderer);
 		if(BirdState) Main.RenderChoosingBird(renderer);
@@ -147,15 +148,15 @@ void GameLoop::Update()
     // Scoring Mechanics//////
 	std::string s;
 	s = std::to_string(points);
-	score.Text(s, renderer);
+	score.Text(s, renderer, white);
 	s = "BEST SCORE: " + std::to_string(maxPoints);
-	maxScore.Text(s, renderer);
+	maxScore.Text(s, renderer, white);
 	//////////////////////////
 	bool flag1 = false, flag2 = false;
 	ground1.GroundUpdate1(speed);
 	ground2.GroundUpdate2(speed);
-	flag1 = Pipe_Above1.Pipe_Above1Update(variance1, var1, points, speed);
-	flag2 = Pipe_Below1.Pipe_Below1Update(variance1, var1, speed);
+	flag1 = Pipe_Above1.Pipe_Above1Update(variance1, var1, points, speed, hard);
+	flag2 = Pipe_Below1.Pipe_Below1Update(variance1, var1, speed, hard);
 	if (flag1 && flag2)
 	{
 		if(shield>0) shield--;
@@ -163,11 +164,11 @@ void GameLoop::Update()
 		srand(SDL_GetTicks());
 		variance1 = rand() % 201 - 100;
 		var1 = rand() % 60 + 30; 
-		Pipe_Above1.Pipe_Above1Update(variance1, var1, points, speed);
-		Pipe_Below1.Pipe_Below1Update(variance1, var1, speed);
+		Pipe_Above1.Pipe_Above1Update(variance1, var1, points, speed, hard);
+		Pipe_Below1.Pipe_Below1Update(variance1, var1, speed, hard);
 	}
-	flag1 = Pipe_Above2.Pipe_Above2Update(variance2, var2, points, speed);
-	flag2 = Pipe_Below2.Pipe_Below2Update(variance2, var2, speed);
+	flag1 = Pipe_Above2.Pipe_Above2Update(variance2, var2, points, speed, hard);
+	flag2 = Pipe_Below2.Pipe_Below2Update(variance2, var2, speed, hard);
 	if (flag1 && flag2)
 	{
 		if(shield>0) shield--;
@@ -175,11 +176,11 @@ void GameLoop::Update()
 		srand(SDL_GetTicks());
 		variance2 = rand() % 201 - 100;
 		var2 = rand() % 60 + 30;
-		Pipe_Above2.Pipe_Above2Update(variance2, var2, points, speed);
-		Pipe_Below2.Pipe_Below2Update(variance2, var2, speed);
+		Pipe_Above2.Pipe_Above2Update(variance2, var2, points, speed, hard);
+		Pipe_Below2.Pipe_Below2Update(variance2, var2, speed, hard);
 	}
-	flag1 = Pipe_Above3.Pipe_Above3Update(variance3, var3, points, speed);
-	flag1 = Pipe_Below3.Pipe_Below3Update(variance3, var3, speed);
+	flag1 = Pipe_Above3.Pipe_Above3Update(variance3, var3, points, speed, hard);
+	flag1 = Pipe_Below3.Pipe_Below3Update(variance3, var3, speed, hard);
 	if (flag1 && flag2)
 	{
 		if(shield) shield--;
@@ -187,8 +188,8 @@ void GameLoop::Update()
 		srand(SDL_GetTicks());
 		variance3 = rand() % 201 - 100;
 		var3 = rand() % 60 + 30;
-		Pipe_Above3.Pipe_Above3Update(variance3, var3, points, speed);
-		Pipe_Below3.Pipe_Below3Update(variance3, var3, speed);
+		Pipe_Above3.Pipe_Above3Update(variance3, var3, points, speed, hard);
+		Pipe_Below3.Pipe_Below3Update(variance3, var3, speed, hard);
 	}
     flag1 = Golden_Apple.Golden_AppleUpdate(variance4, speed);
     if(flag1)
@@ -209,22 +210,10 @@ void GameLoop::Event()
     {
         GameState = false;
     }
-    if(event1.type == SDL_KEYDOWN)
-    {
-        if(event1.key.keysym.sym == SDLK_SPACE)
-		{
-			if(Mix_PausedMusic())
-			{
-				Mix_ResumeMusic();
-			}else{
-				Mix_PauseMusic();
-			}
-		}
-    }
 	if(event1.type == SDL_MOUSEBUTTONDOWN || event1.type == SDL_KEYDOWN)
 	{
 		if((event1.motion.x < WIDTH && event1.motion.x > 0 && event1.motion.y > 0 && event1.motion.y < HEIGHT) || event1.key.keysym.sym == SDLK_UP){
-			if(!p.JumpState())
+			if(!p.JumpState() && !pDeath)
             {
                 p.Jump();
 				armor.Jump();
@@ -250,24 +239,21 @@ void GameLoop::CollisionDetection()
 	if (Collision::CheckCollision(&p.getDest(), &Pipe_Above1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest(), shield))
 	{
 		Mix_PlayChannel(2, Hitsound, 0);
-		maxPoints = max(points, maxPoints);
-		std::string s = "BEST SCORE: " + std::to_string(maxPoints);
-		maxScore.Text(s, renderer);
-		SDL_Delay(3000);
-		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, score, maxScore);
-		Reset();
+		speed = 0;
+		pDeath = true;
 	}
-	else if (Collision::CheckAppleCollision(&p.getDest(), &ground1.getDest()) || Collision::CheckAppleCollision(&p.getDest(), &ground2.getDest()) || p.getYpos() < 0)
+	if(p.getYpos() >= 490)
 	{
 		Mix_PlayChannel(2, Hitsound, 0);
+		Mix_PauseMusic();
 		maxPoints = max(points, maxPoints);
 		std::string s = "BEST SCORE: " + std::to_string(maxPoints);
-		maxScore.Text(s, renderer);
-		SDL_Delay(3000);
-		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, score, maxScore);
+		maxScore.Text(s, renderer, white);
+		SDL_Delay(1500);
+		Main.gameContinue(renderer, event1, GameState, MenuState, cooldownState, points, maxPoints);
 		Reset();
 	}
-    else if(Collision::CheckAppleCollision(&p.getDest(), &Golden_Apple.getDest()))
+    else if(Collision::CheckAppleCollision(&p.getDest(), &Golden_Apple.getDest()) && !pDeath)
     {
         AppleState = false;
 		shield = 4; // invisible through 5 pipes
@@ -279,6 +265,7 @@ void GameLoop::Reset()
 	points = 0;
 	shield = 0;
 	speed = 2.8;
+	pDeath = 0;
 	variance1 = rand() % 201 - 100;
 	variance2 = rand() % 201 - 100;
 	variance3 = rand() % 201 - 100;

@@ -7,12 +7,13 @@ class TextShow
 {
 private:
     TTF_Font* font;
-    SDL_Rect TextRect;
+    SDL_Rect TextRect, srcRest, desRect;
     SDL_Texture* fontTexture;
 public:
     void CreateFont(const char* fileAddress, int size);
-	void Text(std::string Text, SDL_Renderer* ren);
-	void CreateTexture(SDL_Surface* sur, SDL_Renderer* ren);
+	void Text(std::string Text, SDL_Renderer* ren, SDL_Color color);
+    void setDst(int x, int y);
 	void Render(SDL_Renderer* ren, int x, int y);
+    void RenderAngle(SDL_Renderer* ren, double angle);
 	void CloseFont();
 };

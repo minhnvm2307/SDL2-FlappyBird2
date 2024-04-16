@@ -1,26 +1,12 @@
 #include"Player.h"
 #include<iostream>
 
-/// old mechanics////////////
-void Player::RenderDown(SDL_Renderer* ren)
+/// Extra mechanics////////////
+void Player::RenderFall(SDL_Renderer* ren)
 {
-animationTimer1++;
-	if (animationTimer1 < 15)
-	{
-		SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), 25, NULL, SDL_FLIP_NONE);
-	}
-	else if (animationTimer1 >= 15 && animationTimer1 <= 30)
-	{
-		SDL_RenderCopyEx(ren, Tex1, &getSrc(), &getDest(), 25, NULL, SDL_FLIP_NONE);
-	}
-	else if (animationTimer1 > 30)
-	{
-		SDL_RenderCopyEx(ren, Tex2, &getSrc(), &getDest(), 25, NULL, SDL_FLIP_NONE);
-	}
-	if (animationTimer1 > 45)
-	{
-		animationTimer1 = 0;
-	}}
+	SDL_RenderCopyEx(ren, getTexture(), &getSrc(), &getDest(), 90, NULL, SDL_FLIP_NONE);
+
+}
 
 void Player::RenderShield(SDL_Renderer* ren)
 {
@@ -31,8 +17,8 @@ void Player::RenderShield(SDL_Renderer* ren)
 
 void Player::Render(SDL_Renderer *ren)
 {
-	angle += 1.3;
-	if(angle > 50) angle = 50;
+	angle += 1.4;
+	if(angle > 90) angle = 90;
 	if(speed < 0){
 		SDL_RenderCopyEx(ren, Tex2, &getSrc(), &getDest(), -30, NULL, SDL_FLIP_NONE);// flying
 	}else{
@@ -57,6 +43,7 @@ void Player::Gravity()
     Ypos += speed;
     setDest(50, Ypos, 52, 33);
 }
+
 
 void Player::ArmorGravity()
 {
