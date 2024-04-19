@@ -45,6 +45,8 @@ Bằng những thuật toán điều kiện rẽ nhánh cơ bản cùng với h�
 # Lời kết
 - Qua quá trình tìm hiểu đầy đủ về cách lập trình đồ họa qua thư viện SDL em đã học thêm được nhiều kiến thức kinh ngiệm trong việc xây dựng cấu trúc code, thành thạo hơn các thuật toán, hàm cơ bản. 
 Cảm ơn thầy đã xem bản tự đánh giá trên.
+## Link video YouTube: 
+https://youtu.be/QMGX5TDlnC4
 
 
 
