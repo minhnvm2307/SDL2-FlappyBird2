@@ -236,7 +236,7 @@ void GameLoop::Event()
 
 void GameLoop::CollisionDetection()
 {
-	if (Collision::CheckCollision(&p.getDest(), &Pipe_Above1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest(), shield))
+	if (Collision::CheckCollision(&p.getDest(), &Pipe_Above1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below1.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below2.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Above3.getDest(), shield) || Collision::CheckCollision(&p.getDest(), &Pipe_Below3.getDest(), shield) || p.getYpos() < -5)
 	{
 		Mix_PlayChannel(2, Hitsound, 0);
 		speed = 0;
@@ -258,6 +258,26 @@ void GameLoop::CollisionDetection()
         AppleState = false;
 		shield = 4; // invisible through 5 pipes
     }
+}
+
+void GameLoop::AIflappy()
+{
+	if(p.getYpos() > AIpos()-55 && !p.JumpState() && !pDeath && p.getYpos() > AIpos()-200){
+		p.Jump();
+	}
+}
+
+double GameLoop::AIpos()
+{
+	int x1 = Pipe_Below1.getDest().x, x2 = Pipe_Below2.getDest().x, x3 = Pipe_Below3.getDest().x;
+	int y1 = Pipe_Below1.getDest().y, y2 = Pipe_Below2.getDest().y, y3 = Pipe_Below3.getDest().y;
+	if(x1 < 10 && x2 > 52){
+		return y2;
+	}else if(x2 <10 && x3 > 52){
+		return y3;
+	}else {
+		return y1;
+	}
 }
 
 void GameLoop::Reset()
@@ -317,6 +337,7 @@ void GameLoop::Render()
 void GameLoop::Clear()
 {
     score.CloseFont();
+	Main.closeLeaderBoard();
 	Mix_HaltMusic();
 	Mix_FreeMusic(music); music = NULL;
 	Mix_FreeChunk(Jumpsound); Jumpsound = NULL;

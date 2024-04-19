@@ -182,7 +182,7 @@ bool Background::Golden_AppleUpdate(int incY, double &speed)
     {
         appleDistance -= speed;
         setSource(0, 0, 300, 300);
-        setDest(appleDistance, 60 + this->incY4 , 45, 45);
+        setDest(appleDistance, this->incY4 , 45, 45);
         return false;
     }
 }
@@ -215,46 +215,6 @@ void Background::GroundUpdate2(double &speed)
 	}
 }
 
-
-double Background::getPipe1Y()
-{
-	return 300 + this->incY1;
-}
-
-double Background::getPipe1X()
-{
-	return pipeDistance1;
-}
-
-double Background::getPipe2Y()
-{
-	return 300 + this->incY2;
-}
-
-double Background::getPipe2X()
-{
-	return pipeDistance2;
-}
-
-double Background::getPipe3Y()
-{
-	return 300 + this->incY3;
-}
-
-double Background::getPipe3X()
-{
-	return pipeDistance3;
-}
-
-double Background::getAppleY()
-{
-    return 400 + this->incY4;
-}
-
-// double Background::getAppleX()
-// {
-//     return appleDistance;
-// }
 
 void Background::Reset()
 {

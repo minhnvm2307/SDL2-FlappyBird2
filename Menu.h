@@ -5,10 +5,12 @@
 #include "Background.h"
 #include "ScoreText.h"
 #include "Player.h"
-#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
 
 
-class menu : public Background
+class menu 
 {
 private:
     bool play = false;
@@ -16,7 +18,7 @@ private:
     Background endGame;
     Background choosingBird, tutorial;
     Background vItem;
-    Background settingItem, settingMenu;
+    Background settingItem, settingMenu, leaderB;
     TextShow DifficultyState;
     TextShow Bmusic;
     TextShow point, maxPoint, newRecord;
@@ -25,7 +27,13 @@ private:
     bool musicState = 1;
     int count = 0; int prevMaxPoint = 0;
     std::string Diff1 = "Difficult", Diff2 = "Easy", On = "ON", Off = "OFF";
+    bool ptrHard = 1;
     SDL_Color blue = {113, 178, 252} , red = {245, 80, 124}, white = {252, 252, 252};
+
+    //////LEADER BOARD
+    vector<string> saveScore, saveMode;
+    vector<TextShow> saveRen;
+    bool leaderState = 0;
 public:
     menu();
     ~menu();
@@ -37,5 +45,7 @@ public:
     void makeSetting(SDL_Renderer *ren);
     void gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &MenuState, bool &cooldown, int score, int maxScore);
     bool getPlayState();
-    void countDown(SDL_Renderer *ren);
+    void leaderBoard(SDL_Renderer *ren);
+    void upDateBoard(int score, SDL_Renderer* ren);
+    void closeLeaderBoard();
 };

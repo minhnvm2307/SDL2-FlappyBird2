@@ -65,6 +65,7 @@ public:
     bool getMenuState();
     void Update();
     void AIflappy();
+    double AIpos();
     void Reset();
     void Intialize();
     void Event();

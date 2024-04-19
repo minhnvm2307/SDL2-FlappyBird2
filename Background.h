@@ -28,14 +28,6 @@ public:
 	bool Pipe_Above3Update(int incY, int ceil, int& score, double &speed, bool &hard);
 	bool Pipe_Below3Update(int incY, int ceil, double &speed, bool &hard);
     bool Golden_AppleUpdate(int incY, double &speed);
-    double getAppleX();
-    double getAppleY();
-	double getPipe1X();
-	double getPipe1Y();
-	double getPipe2X();
-	double getPipe2Y();
-	double getPipe3X();
-	double getPipe3Y();
 	void GroundUpdate1(double &speed);
 	void GroundUpdate2(double &speed);
     void Reset();

@@ -23,6 +23,7 @@ int main(int argc, char** argv)
         g->Event();
         g->Update();
         g->Render();
+        //g->AIflappy();
 
         frameTime = SDL_GetTicks() - frameStart;
         if(frameTime < DELAY_TIME){

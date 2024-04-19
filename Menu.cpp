@@ -32,10 +32,15 @@ void menu::Render(SDL_Renderer *ren)
 
 void menu::MakeChoosingBird(SDL_Renderer* ren)
 {
-    choosingBird.CreateTexture("Image/choosingBird.png", ren);
+    leaderB.CreateTexture("Image/leaderboard.png", ren);
+    leaderB.setSource(0, 0, 460, 598);
+    leaderB.setDest(0, 0, 460, 598);
+
     vItem.CreateTexture("Image/vItem.png", ren);
     vItem.setSource(0, 0, 360, 360);
     vItem.setDest(290, 320, 55, 55);
+
+    choosingBird.CreateTexture("Image/choosingBird.png", ren);
     choosingBird.setSource(0, 0, 500, 300);
     choosingBird.setDest(150, 250, 500, 300);
 
@@ -118,10 +123,10 @@ void menu::eventMouse(SDL_Event& ev, Player &p, bool &GameState, bool &MenuState
         }
         else if(ev.motion.x > 530 && ev.motion.x < 560 && ev.motion.y > 280 && ev.motion.y < 310 && settingState==1){// Change Difficulty
                 if(hard==1){
-                    hard = 0;
+                    hard = 0; ptrHard = 0;
                     DifficultyState.Text(Diff1, renderer, red);// DIFFICULT
                 }else{
-                    hard = 1;
+                    hard = 1; ptrHard = 1;
                     DifficultyState.Text(Diff2, renderer, blue);// EASY
                 }
                 std::cout << "HARD = " << hard << std::endl;
@@ -185,14 +190,17 @@ void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &
 {
     point.Text(std::to_string(score), ren, white);
     maxPoint.Text(std::to_string(maxScore), ren, white);
+    upDateBoard(score, ren);
     while(1)
     {
 		endGame.GroundRender(ren);
         point.Render(ren, 280, 240);
         maxPoint.Render(ren, 280, 340);
+        
         if(maxScore > prevMaxPoint){
             newRecord.RenderAngle(ren, 30);
         }
+        if(leaderState) leaderBoard(ren);
 		SDL_RenderPresent(ren);
 
         SDL_PollEvent(&e);
@@ -214,6 +222,8 @@ void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &
                 MenuState = true;
                 play = false;
                 break;
+            }else if(e.motion.x > 420 && e.motion.x < 490 && e.motion.y > 350 && e.motion.y < 420){
+                leaderState = (leaderState==1)? 0:1;
             }
         }
         else if(e.type == SDL_QUIT ){
@@ -222,5 +232,70 @@ void menu::gameContinue(SDL_Renderer *ren, SDL_Event& e, bool &gameState, bool &
         }
     }
     prevMaxPoint = maxScore;
+}
+
+void menu::leaderBoard(SDL_Renderer* ren)
+{
+    leaderB.GroundRender(ren);
+    for(int i=0; i<saveRen.size(); i++){
+        saveRen[i].Render(ren, 100, 180 + 40*(i));
+    }
+}
+
+void menu::upDateBoard(int score, SDL_Renderer* ren)
+{
+    saveScore.clear();
+    ifstream inFile("saveScore.txt");
+    string h = to_string(score);
+    saveScore.push_back(h);
+    while(inFile >> h){
+        saveScore.push_back(h);
+    }
+    inFile.close();
+    ///
+    saveMode.clear();
+    ifstream inFile2("saveMode.txt");
+    h = (ptrHard==1)? "Easy" : "Difficult";
+    saveMode.push_back(h);
+    while(inFile2 >> h){
+        saveMode.push_back(h);
+    }
+    inFile2.close();
+    ////////////////////
+    ofstream outFile("saveScore.txt");
+    for(int i=0; i<saveScore.size(); i++){
+        outFile << saveScore[i] << " ";
+    }
+    outFile.close();
+    ///
+    ofstream outFile2("saveMode.txt");
+    for(int i=0; i<saveMode.size(); i++){
+        outFile2 << saveMode[i] << " ";
+    }
+    outFile2.close();
+    ////////////////////
+    TextShow tmp;
+    tmp.CreateFont("Font/calibrib.ttf", 40);
+    if(saveRen.empty()){
+        for(int i=0; i<saveScore.size(); i++){
+            h = saveScore[i] + "             " + saveMode[i];
+            tmp.Text(h, ren, white);
+            saveRen.push_back(tmp);
+        }
+    }else{
+        h = saveScore.front() + "             " + saveMode.front();
+        tmp.Text(h, ren, white);
+        saveRen.push_back(tmp);
+    }
+    tmp.CloseFont();
+}
+
+void menu::closeLeaderBoard()
+{
+    saveScore.clear();
+    saveMode.clear();
+    for(int i=0; i<saveRen.size(); i++){
+        saveRen[i].CloseFont();
+    }
 }
 
